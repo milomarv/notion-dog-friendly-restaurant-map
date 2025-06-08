@@ -129,7 +129,7 @@ else:
         <b>{loc['name']}</b><br>
         <i>{loc['address']}</i><br>
         <b>Status:</b> <span style='color:{loc['status']['color']}'>{loc['status']['text']}</span><br>
-        {"<b>Source:</b> <span style='color:" + loc['source']['color'] + "'>" + loc['source']['text'] + "</span><br>" if loc['source'] else ""}
+        {"<b>Quelle:</b> <span style='color:" + loc['source']['color'] + "'>" + loc['source']['text'] + "</span><br>" if loc['source'] else ""}
         {"<b>Notes:</b> " + loc['notes'] + "<br>" if loc['notes'] else ""}
         """
         folium.Marker(
@@ -148,4 +148,4 @@ else:
 
     st.empty()
     st.title('🍽️ Hundefreundliche Restaurants')
-    st_folium(m, use_container_width=True)
+    st_folium(m, use_container_width=True, height=600)
