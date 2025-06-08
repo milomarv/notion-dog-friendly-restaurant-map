@@ -146,6 +146,7 @@ dependencies = [
     { name = "notion-client" },
     { name = "streamlit" },
     { name = "streamlit-folium" },
+    { name = "tabulate" },
 ]
 
 [package.metadata]
@@ -155,6 +156,7 @@ requires-dist = [
     { name = "notion-client", specifier = ">=2.3.0" },
     { name = "streamlit", specifier = ">=1.45.1" },
     { name = "streamlit-folium", specifier = ">=0.25.0" },
+    { name = "tabulate", specifier = ">=0.9.0" },
 ]
 
 [[package]]
@@ -717,6 +719,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/e7/c9/4b96909cbc2c82859a962d68cdbc1f54a12dae4a828615bd302626489b2c/streamlit_folium-0.25.0.tar.gz", hash = "sha256:f32eb51c1958705030e15045a38edaf9c046d6de5e6587e64190251466a4a006", size = 330728, upload-time = "2025-04-21T16:53:54.969Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/57/1d/4fb456ca29b58b4272672bbd80769ba114b21ccf39af2bf0531895f559bc/streamlit_folium-0.25.0-py3-none-any.whl", hash = "sha256:48d5f05ea3e9005c00c0b2fe5a9a3086df30d04e1a20c3630a6c9df183ec590a", size = 328445, upload-time = "2025-04-21T16:53:53.435Z" },
+]
+
+[[package]]
+name = "tabulate"
+version = "0.9.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ec/fe/802052aecb21e3797b8f7902564ab6ea0d60ff8ca23952079064155d1ae1/tabulate-0.9.0.tar.gz", hash = "sha256:0095b12bf5966de529c0feb1fa08671671b3368eec77d7ef7ab114be2c068b3c", size = 81090, upload-time = "2022-10-06T17:21:48.54Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/40/44/4a5f08c96eb108af5cb50b41f76142f0afa346dfa99d5296fe7202a11854/tabulate-0.9.0-py3-none-any.whl", hash = "sha256:024ca478df22e9340661486f85298cff5f6dcdba14f3813e8830015b9ed1948f", size = 35252, upload-time = "2022-10-06T17:21:44.262Z" },
 ]
 
 [[package]]

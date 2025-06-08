@@ -7,6 +7,7 @@ from notion_client import Client
 import time
 from typing import List, Dict
 import pandas as pd
+import html
 
 # --- Notion config ---
 NOTION_API_KEY = st.secrets['NOTION_API_KEY']
@@ -86,6 +87,8 @@ def fetch_locations() -> List[Dict]:
             else:
                 notes = None
 
+            maps_url = row_props['Google Maps']['formula']['string']
+
             if location:
                 lat, lon = location.latitude, location.longitude
                 while (lat, lon) in seen_coords:
@@ -102,6 +105,7 @@ def fetch_locations() -> List[Dict]:
                         'status': status,
                         'source': source,
                         'notes': notes,
+                        'maps_url': maps_url,
                     }
                 )
             time.sleep(0.25)  # Rate limit
@@ -112,6 +116,42 @@ def fetch_locations() -> List[Dict]:
             st.write(traceback.format_exc())
             continue
     return locations
+
+
+def make_html_table(df) -> str:
+    html_table = "<table style='width:100%; border-collapse:collapse;'>"
+    # Header
+    html_table += (
+        '<tr>'
+        '<th>📍 Name</th>'
+        '<th>ℹ️ Status</th>'
+        '<th>🗺️ Address</th>'
+        '<th>💡 Source</th>'
+        '<th>📝 Notes</th>'
+        '<th>🔗 Google Maps</th>'
+        '</tr>'
+    )
+    # Rows
+    for _, row in df.iterrows():
+        html_table += '<tr>'
+        html_table += f"<td>{html.escape(str(row['Name']))}</td>"
+        html_table += (
+            f"<td style='background-color:{row['StatusColor']};color:white'>"
+            f"{html.escape(str(row['Status']))}</td>"
+        )
+        html_table += f"<td>{html.escape(str(row['Address']))}</td>"
+        html_table += (
+            f"<td style='background-color:{row['SourceColor']};color:white'>"
+            f"{html.escape(str(row['Source']))}</td>"
+        )
+        html_table += f"<td>{html.escape(str(row['Notes']))}</td>"
+        if row['Google Maps']:
+            html_table += f"<td><a href='{row['Google Maps']}' target='_blank'>{row['Name']} Maps</a></td>"
+        else:
+            html_table += '<td></td>'
+        html_table += '</tr>'
+    html_table += '</table>'
+    return html_table
 
 
 # --- Build map ---
@@ -138,6 +178,7 @@ else:
         <b>Status:</b> <span style='color:{loc['status']['color']}'>{loc['status']['text']}</span><br>
         {"<b>Quelle:</b> <span style='color:" + loc['source']['color'] + "'>" + loc['source']['text'] + "</span><br>" if loc['source'] else ""}
         {"<b>Notes:</b> " + loc['notes'] + "<br>" if loc['notes'] else ""}
+        <a href="{loc['maps_url']}" target="_blank">Open in Google Maps</a>
         """
         folium.Marker(
             location=[loc['lat'], loc['lon']],
@@ -165,36 +206,15 @@ else:
             'Source': loc['source']['text'] if loc['source'] else '',
             'SourceColor': loc['source']['color'] if loc['source'] else '',
             'Notes': loc['notes'] if loc['notes'] else '',
+            'Google Maps': loc['maps_url'],
         }
         table_data.append(row)
 
     df = pd.DataFrame(table_data)
     df = df.sort_values(by='Name')
 
-    def highlight_status(val, color) -> str:
-        return f'background-color: {color}; color: white'
-
-    def highlight_source(val, color) -> str:
-        return f'background-color: {color}; color: white'
-
-    def style_row(row) -> List[str]:
-        status_style = f'background-color: {row.StatusColor}; color: white'
-        source_style = (
-            f'background-color: {row.SourceColor}; color: white'
-            if row.SourceColor
-            else ''
-        )
-        return ['', '', status_style, '', source_style, '', '']
-
-    styled_df = df.style.apply(style_row, axis=1)
-
-    st.subheader('🍽️ Hundefreundliche Restaurants')
-    st.dataframe(
-        styled_df,
-        use_container_width=True,
-        column_order=['Name', 'Status', 'Address', 'Source', 'Notes'],
-        hide_index=True,
-    )
+    st.subheader('🐶 Hundefreundliche Restaurants 🍽️')
+    st.markdown(make_html_table(df), unsafe_allow_html=True)
 
     st_folium(m, height=600, use_container_width=True)
 
