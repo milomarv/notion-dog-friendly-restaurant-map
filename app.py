@@ -173,6 +173,7 @@ else:
         table_data.append(row)
 
     df = pd.DataFrame(table_data)
+    df = df.sort_values(by='Name')
 
     def highlight_status(val, color) -> str:
         return f'background-color: {color}; color: white'
