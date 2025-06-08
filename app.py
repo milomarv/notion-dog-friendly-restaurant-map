@@ -2,11 +2,11 @@ import traceback
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
-import streamlit.components.v1 as components
 from geopy.geocoders import Nominatim
 from notion_client import Client
 import time
 from typing import List, Dict
+import pandas as pd
 
 # --- Notion config ---
 NOTION_API_KEY = st.secrets['NOTION_API_KEY']
@@ -25,6 +25,12 @@ def get_color(color_string: str) -> str:
         return 'orange'
     elif color_string == 'pink':
         return 'magenta'
+    elif color_string == 'blue':
+        return 'cadetblue'
+    elif color_string == 'red':
+        return 'darkred'
+    elif color_string == 'green':
+        return 'darkgreen'
     return color_string
 
 
@@ -148,13 +154,49 @@ else:
     m.fit_bounds([sw, ne])
 
     st.empty()
-    st.title('🍽️ Hundefreundliche Restaurants')
+    st.subheader('🍽️ Hundefreundliche Restaurants')
     st_folium(m, use_container_width=True, height=600)
 
-    components.iframe(
-        'https://marvin-milojevic.notion.site/ebd/20c933565bfb80778876e96ff71e5421?v=20c933565bfb8092b4e4000c1d03aac8',
-        height=600,
-        scrolling=True,
+    # Show locations in a table
+
+    table_data = []
+    for loc in locations:
+        row = {
+            'Name': loc['name'],
+            'Address': loc['address'],
+            'Status': loc['status']['text'],
+            'StatusColor': loc['status']['color'],
+            'Source': loc['source']['text'] if loc['source'] else '',
+            'SourceColor': loc['source']['color'] if loc['source'] else '',
+            'Notes': loc['notes'] if loc['notes'] else '',
+        }
+        table_data.append(row)
+
+    df = pd.DataFrame(table_data)
+
+    def highlight_status(val, color) -> str:
+        return f'background-color: {color}; color: white'
+
+    def highlight_source(val, color) -> str:
+        return f'background-color: {color}; color: white'
+
+    def style_row(row) -> List[str]:
+        status_style = f'background-color: {row.StatusColor}; color: white'
+        source_style = (
+            f'background-color: {row.SourceColor}; color: white'
+            if row.SourceColor
+            else ''
+        )
+        return ['', '', status_style, '', source_style, '', '']
+
+    styled_df = df.style.apply(style_row, axis=1)
+
+    st.subheader('Alle Standorte als Tabelle')
+    st.dataframe(
+        styled_df,
+        use_container_width=True,
+        column_order=['Name', 'Status', 'Address', 'Source', 'Notes'],
+        hide_index=True,
     )
 
     # Impressum
