@@ -2,6 +2,7 @@ import traceback
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
+import streamlit.components.v1 as components
 from geopy.geocoders import Nominatim
 from notion_client import Client
 import time
@@ -149,6 +150,12 @@ else:
     st.empty()
     st.title('🍽️ Hundefreundliche Restaurants')
     st_folium(m, use_container_width=True, height=600)
+
+    components.iframe(
+        'https://marvin-milojevic.notion.site/ebd/20c933565bfb80778876e96ff71e5421?v=20c933565bfb8092b4e4000c1d03aac8',
+        height=600,
+        scrolling=True,
+    )
 
     # Impressum
     st.markdown(
