@@ -119,7 +119,10 @@ def fetch_locations() -> List[Dict]:
 
 
 def make_html_table(df) -> str:
-    html_table = "<table style='width:100%; border-collapse:collapse;'>"
+    html_table = """
+    <div style='overflow-x:auto; width:100%;'>
+    <table style='width:100%; border-collapse:collapse; min-width:800px;'>
+    """
     # Header
     html_table += (
         '<tr>'
@@ -150,7 +153,7 @@ def make_html_table(df) -> str:
         else:
             html_table += '<td></td>'
         html_table += '</tr>'
-    html_table += '</table>'
+    html_table += '</table></div>'
     return html_table
 
 
@@ -216,7 +219,7 @@ else:
     st.subheader('🐶 Hundefreundliche Restaurants 🍽️')
     st.markdown(make_html_table(df), unsafe_allow_html=True)
 
-    st_folium(m, height=600, use_container_width=True)
+    st_folium(m, height=450, use_container_width=True)
 
     # Impressum
     st.markdown(
