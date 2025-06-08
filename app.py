@@ -153,10 +153,6 @@ else:
     # Fit map to bounds
     m.fit_bounds([sw, ne])
 
-    st.empty()
-    st.subheader('🍽️ Hundefreundliche Restaurants')
-    st_folium(m, use_container_width=True, height=600)
-
     # Show locations in a table
 
     table_data = []
@@ -192,13 +188,15 @@ else:
 
     styled_df = df.style.apply(style_row, axis=1)
 
-    st.subheader('Alle Standorte als Tabelle')
+    st.subheader('🍽️ Hundefreundliche Restaurants')
     st.dataframe(
         styled_df,
         use_container_width=True,
         column_order=['Name', 'Status', 'Address', 'Source', 'Notes'],
         hide_index=True,
     )
+
+    st_folium(m, height=600, use_container_width=True)
 
     # Impressum
     st.markdown(
