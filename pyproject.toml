@@ -1,0 +1,13 @@
+[project]
+name = "dogfriendlyrestaurantsmap"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "folium>=0.19.7",
+    "geopy>=2.4.1",
+    "notion-client>=2.3.0",
+    "streamlit>=1.45.1",
+    "streamlit-folium>=0.25.0",
+]
