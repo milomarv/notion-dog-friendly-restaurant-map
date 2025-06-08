@@ -149,3 +149,8 @@ else:
     st.empty()
     st.title('🍽️ Hundefreundliche Restaurants')
     st_folium(m, use_container_width=True, height=600)
+
+    # Impressum
+    st.markdown(
+        '[Impressum](https://marvin-milojevic.notion.site/Imprint-c4891e91b9484e9e99dab7964bb47cb3)'
+    )
